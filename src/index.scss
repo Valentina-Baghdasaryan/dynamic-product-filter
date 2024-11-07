@@ -1,0 +1,20 @@
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@font-face {
+  font-family: 'MyriadPro-Title';
+  src: url('../public/fonts/MYRIADPRO-CONDIT.OTF') format('opentype');
+}
+
+@font-face {
+  font-family: 'MyriadPro-Light';
+  src: url('../public/fonts/MyriadPro-Light.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'MyriadPro-COND';
+  src: url('../public/fonts/MYRIADPRO-COND.OTF') format('opentype');
+}

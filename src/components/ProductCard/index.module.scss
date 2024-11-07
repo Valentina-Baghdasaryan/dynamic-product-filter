@@ -1,0 +1,79 @@
+.product {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  align-items: center;
+  max-width: 280px;
+  border: 2px solid rgb(200, 199, 199);
+  margin: 20px;
+  border-radius: 5px;
+
+  background-color: rgb(244, 244, 244);
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+
+  .productImg {
+    max-width: 270px;
+    width: 100%;
+    max-height: 220px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+
+    &:hover {
+      scale: 1.09;
+    }
+  }
+
+  .productTitle {
+    font-family: 'MyriadPro-Title';
+    font-size: 25px;
+    font-style: bold;
+    color: rgb(51, 51, 51);
+    margin: 15px 0;
+  }
+
+  .brand {
+    font-family: 'MyriadPro-Light';
+    margin-bottom: 5px;
+  }
+
+  .ratingWrapper {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    position: relative;
+    margin-bottom: 5px;
+
+    .ratingValue {
+      p {
+        position: absolute;
+        margin: 0;
+        top: 1px;
+        display: none;
+        font-family: 'MyriadPro-Light';
+        font-size: 18px;
+        font-weight: 700;
+        color: rgb(55, 55, 55);
+      }
+    }
+
+    &:hover .ratingValue p {
+      margin: none;
+      display: block;
+    }
+  }
+
+  .price {
+    font-family: 'MyriadPro-COND';
+    font-size: 25px;
+    font-weight: 700;
+    color: rgb(18, 34, 48);
+  }
+}
