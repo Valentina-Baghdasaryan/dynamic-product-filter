@@ -49,7 +49,7 @@ export const useFilters = (products) => {
 
     switch (filters.sortBy) {
       case 'price-low':
-        result.sort((item1, item2) => item1.price - item2);
+        result.sort((item1, item2) => item1.price - item2.price);
         break;
       case 'price-high':
         result.sort((item1, item2) => item2.price - item1.price);

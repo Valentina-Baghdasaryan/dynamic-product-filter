@@ -28,30 +28,30 @@ import FilterSidebar from './components/FilterSidebar/index.jsx';
 
 const drawerWidth = 340;
 
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme }) => ({
-    flexGrow: 1,
-    // padding: theme.spacing(23),
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginRight: -drawerWidth,
-    position: 'relative',
-    variants: [
-      {
-        props: ({ open }) => open,
-        style: {
-          transition: theme.transitions.create('margin', {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-          }),
-          marginRight: 0,
-        },
-      },
-    ],
-  }),
-);
+// const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
+//   ({ theme }) => ({
+//     display: 'flex',
+//     paddingTop: theme.spacing(2),
+//     transition: theme.transitions.create('margin', {
+//       easing: theme.transitions.easing.sharp,
+//       duration: theme.transitions.duration.leavingScreen,
+//     }),
+//     marginRight: -drawerWidth,
+//     position: 'relative',
+//     variants: [
+//       {
+//         props: ({ open }) => open,
+//         style: {
+//           transition: theme.transitions.create('margin', {
+//             easing: theme.transitions.easing.easeOut,
+//             duration: theme.transitions.duration.enteringScreen,
+//           }),
+//           marginRight: 0,
+//         },
+//       },
+//     ],
+//   }),
+// );
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
@@ -97,21 +97,39 @@ function App() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-
+  const itemsPerPage = 6
   const categories = Array.from(
     new Set(products.map((product) => product.category)),
   );
   const brands = Array.from(new Set(products.map((product) => product.brand)));
+  const [currentPage, setCurrentPage] = useState(1);
 
+  const totalPages = Math.ceil(products.length / itemsPerPage);
+
+  const indexOfLastProduct = currentPage * itemsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
+  const currentProducts = products.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct,
+  );
+
+
+  const handlePrevious = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNext = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box >
       <CssBaseline />
-      {/* <AppBar
+      <AppBar
         position="fixed"
         open={open}
         style={{ background: 'rgb(221, 195, 195)' }}
       >
-        <Toolbar>
+        <Toolbar style={{display: 'flex', justifyContent: 'space-between'}}>
           <h2 className="headerTitle">Product Catalog</h2>
           {isSmallScreen && (
             <IconButton
@@ -126,20 +144,36 @@ function App() {
             </IconButton>
           )}
         </Toolbar>
-      </AppBar> */}
-      <Main open={open}>
+      </AppBar>
+      <div open={open}>
         <DrawerHeader />
         <div className="main">
-          <FilterSidebar
+          {!isSmallScreen && <FilterSidebar
             filters={filters}
             setFilters={setFilters}
             categories={categories}
             brands={brands}
-          />
-          <ProductGrid products={filteredProducts} />
+          />}
+          <div>
+          <ProductGrid products={currentProducts} />
+
+          {products.length && totalPages >= 2 && (
+        <div className={'pagination'}>
+          <button onClick={handlePrevious} disabled={currentPage === 1}>
+            Previous
+          </button>
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
+          <button onClick={handleNext} disabled={currentPage === totalPages}>
+            Next
+          </button>
         </div>
-      </Main>
-      {/* <Drawer
+      )}
+          </div>
+        </div>
+      </div>
+      <Drawer
         sx={{
           width: drawerWidth,
           flexShrink: 0,
@@ -160,7 +194,7 @@ function App() {
             )}
           </IconButton>
         </DrawerHeader>
-        <Divider />
+        {/* <Divider />
         <List>
           {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
             <ListItem key={text} disablePadding>
@@ -185,8 +219,14 @@ function App() {
               </ListItemButton>
             </ListItem>
           ))}
-        </List>
-      </Drawer> */}
+        </List> */}
+         <FilterSidebar
+            filters={filters}
+            setFilters={setFilters}
+            categories={categories}
+            brands={brands}
+          />
+      </Drawer>
     </Box>
   );
 }

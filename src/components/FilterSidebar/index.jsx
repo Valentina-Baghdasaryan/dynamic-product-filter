@@ -2,6 +2,8 @@ import PriceRange from '../PriceRangeSlider/index.jsx';
 import Category from '../Category/index.jsx';
 import { FormControl, MenuItem, Select } from '@mui/material';
 
+import styles from './index.module.scss';
+
 const FilterSidebar = ({ filters, setFilters, categories, brands }) => {
   const handleCategoryChange = (category) => {
     const newCategories = filters.category.includes(category)
@@ -17,7 +19,7 @@ const FilterSidebar = ({ filters, setFilters, categories, brands }) => {
     setFilters({ ...filters, brand: newBrands });
   };
   return (
-    <div className="space-y-6">
+    <div className={styles.filterSide}>
       <div>
         <h3 className="text-lg font-semibold mb-3">Sort By</h3>
         <FormControl
@@ -29,7 +31,9 @@ const FilterSidebar = ({ filters, setFilters, categories, brands }) => {
           <Select
             displayEmpty
             value={filters.sortBy || ''}
-            onChange={(value) => setFilters({ ...filters, sortBy: value })}
+            onChange={(event) =>
+              setFilters({ ...filters, sortBy: event.target.value })
+            }
             inputProps={{
               'aria-label': 'Without label',
             }}
