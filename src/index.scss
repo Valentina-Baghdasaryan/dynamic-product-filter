@@ -18,3 +18,16 @@ body {
   font-family: 'MyriadPro-COND';
   src: url('../public/fonts/MYRIADPRO-COND.OTF') format('opentype');
 }
+
+.headerTitle {
+  font-family: 'MyriadPro-COND';
+  font-size: 25px;
+
+  @media screen and (max-width: 768px) {
+    font-size: 18px;
+  }
+}
+
+.main {
+  display: flex;
+}
