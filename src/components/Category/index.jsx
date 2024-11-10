@@ -1,8 +1,6 @@
 import { Checkbox } from '@mui/material';
-import { products } from '../../data/products';
 
 const Category = ({ data, filters, title, type, handleOnChange }) => {
- 
   return (
     <div>
       <h3 className="text-lg font-semibold mb-3">{title}</h3>
@@ -12,11 +10,9 @@ const Category = ({ data, filters, title, type, handleOnChange }) => {
             <Checkbox
               id={`category-${item}`}
               checked={
-                (type === 'brand'
+                type === 'brand'
                   ? filters.brand.includes(item)
-                  :
-                   filters.category.includes(item)
-                  )
+                  : filters.category.includes(item)
               }
               onChange={(e) => handleOnChange(item)}
             />

@@ -1,4 +1,5 @@
 import { Rating } from '@mui/material';
+
 import styles from './index.module.scss';
 
 const ProductCard = ({ product }) => {

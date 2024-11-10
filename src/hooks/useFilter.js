@@ -1,4 +1,7 @@
-import { useEffect, useState } from 'react';
+import {
+  useEffect,
+  useState
+} from 'react';
 
 const initialFilterState = {
   category: [],
@@ -17,20 +20,17 @@ export const useFilters = (products) => {
   const [filteredProducts, setFilteredProducts] = useState(products);
 
   useEffect(() => {
-    
     localStorage.setItem('filters', JSON.stringify(filters));
 
     let result = [...products];
 
     if (filters.category.length > 0) {
-      
       result = result.filter((product) =>
         filters.category.includes(product.category),
       );
     }
 
     if (filters.brand.length > 0) {
-      
       result = result.filter((product) =>
         filters.brand.includes(product.brand),
       );
@@ -38,10 +38,9 @@ export const useFilters = (products) => {
 
     result = result.filter(
       (product) =>
-        product.price >= filters.priceRange[0] &&
-        product.price <= filters.priceRange[1]
+      product.price >= filters.priceRange[0] &&
+      product.price <= filters.priceRange[1],
     );
-    
 
     if (filters.rating) {
       result = result.filter((product) => product.rating >= filters.rating);

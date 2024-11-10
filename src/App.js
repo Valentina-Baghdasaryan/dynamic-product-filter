@@ -1,57 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import MuiAppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import CssBaseline from '@mui/material/CssBaseline';
-import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import { useMediaQuery } from '@mui/material';
-import { products } from './data/products.js';
-import './App.scss';
-import './index.scss';
 import ProductGrid from './components/ProductGrid';
 import { useFilters } from './hooks/useFilter.js';
 import FilterSidebar from './components/FilterSidebar/index.jsx';
 
-const drawerWidth = 340;
+import './App.scss';
+import './index.scss';
+import { fetchProducts } from './services/api.js';
 
-// const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
-//   ({ theme }) => ({
-//     display: 'flex',
-//     paddingTop: theme.spacing(2),
-//     transition: theme.transitions.create('margin', {
-//       easing: theme.transitions.easing.sharp,
-//       duration: theme.transitions.duration.leavingScreen,
-//     }),
-//     marginRight: -drawerWidth,
-//     position: 'relative',
-//     variants: [
-//       {
-//         props: ({ open }) => open,
-//         style: {
-//           transition: theme.transitions.create('margin', {
-//             easing: theme.transitions.easing.easeOut,
-//             duration: theme.transitions.duration.enteringScreen,
-//           }),
-//           marginRight: 0,
-//         },
-//       },
-//     ],
-//   }),
-// );
+const drawerWidth = 320;
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
@@ -84,11 +51,28 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 function App() {
-  const isSmallScreen = useMediaQuery('(max-width:768px)');
-  const theme = useTheme();
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [open, setOpen] = useState(false);
-
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery('(max-width:768px)');
   const { filters, setFilters, filteredProducts } = useFilters(products);
+
+  useEffect(() => {
+    const getProducts = async () => {
+      try {
+        const data = await fetchProducts();
+        setProducts(data);
+      } catch (error) {
+        setError('Failed to load products.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getProducts();
+  }, []);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -97,46 +81,29 @@ function App() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  const itemsPerPage = 6
+
   const categories = Array.from(
     new Set(products.map((product) => product.category)),
   );
   const brands = Array.from(new Set(products.map((product) => product.brand)));
-  const [currentPage, setCurrentPage] = useState(1);
 
-  const totalPages = Math.ceil(products.length / itemsPerPage);
+  if (error) return <p className="errorMessage">{error}</p>;
 
-  const indexOfLastProduct = currentPage * itemsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
-  const currentProducts = products.slice(
-    indexOfFirstProduct,
-    indexOfLastProduct,
-  );
-
-
-  const handlePrevious = () => {
-    setCurrentPage((prev) => Math.max(prev - 1, 1));
-  };
-
-  const handleNext = () => {
-    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-  };
   return (
-    <Box >
+    <Box>
       <CssBaseline />
       <AppBar
         position="fixed"
         open={open}
         style={{ background: 'rgb(221, 195, 195)' }}
       >
-        <Toolbar style={{display: 'flex', justifyContent: 'space-between'}}>
+        <Toolbar style={{ display: 'flex', justifyContent: 'space-between' }}>
           <h2 className="headerTitle">Product Catalog</h2>
           {isSmallScreen && (
             <IconButton
               color="inherit"
               aria-label="open drawer"
               edge="end"
-              // style={{display: isSmallScreen ? 'block' : 'none'}}
               onClick={handleDrawerOpen}
               sx={[open && { display: 'none' }]}
             >
@@ -148,29 +115,19 @@ function App() {
       <div open={open}>
         <DrawerHeader />
         <div className="main">
-          {!isSmallScreen && <FilterSidebar
-            filters={filters}
-            setFilters={setFilters}
-            categories={categories}
-            brands={brands}
-          />}
-          <div>
-          <ProductGrid products={currentProducts} />
-
-          {products.length && totalPages >= 2 && (
-        <div className={'pagination'}>
-          <button onClick={handlePrevious} disabled={currentPage === 1}>
-            Previous
-          </button>
-          <span>
-            Page {currentPage} of {totalPages}
-          </span>
-          <button onClick={handleNext} disabled={currentPage === totalPages}>
-            Next
-          </button>
-        </div>
-      )}
-          </div>
+          {!isSmallScreen && (
+            <FilterSidebar
+              filters={filters}
+              setFilters={setFilters}
+              categories={categories}
+              brands={brands}
+            />
+          )}
+          {loading ? (
+            <p className="loadingProducts">Loading products...</p>
+          ) : (
+            <ProductGrid products={filteredProducts} />
+          )}
         </div>
       </div>
       <Drawer
@@ -185,7 +142,7 @@ function App() {
         anchor="right"
         open={open}
       >
-        <DrawerHeader style={{ backgroundColor: 'yellow' }}>
+        <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? (
               <ChevronLeftIcon />
@@ -194,38 +151,12 @@ function App() {
             )}
           </IconButton>
         </DrawerHeader>
-        {/* <Divider />
-        <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List> */}
-         <FilterSidebar
-            filters={filters}
-            setFilters={setFilters}
-            categories={categories}
-            brands={brands}
-          />
+        <FilterSidebar
+          filters={filters}
+          setFilters={setFilters}
+          categories={categories}
+          brands={brands}
+        />
       </Drawer>
     </Box>
   );

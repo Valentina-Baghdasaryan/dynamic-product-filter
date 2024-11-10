@@ -18,6 +18,7 @@ const FilterSidebar = ({ filters, setFilters, categories, brands }) => {
       : [...filters.brand, brand];
     setFilters({ ...filters, brand: newBrands });
   };
+
   return (
     <div className={styles.filterSide}>
       <div>
