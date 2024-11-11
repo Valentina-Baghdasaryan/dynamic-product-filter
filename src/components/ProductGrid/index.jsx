@@ -28,7 +28,7 @@ const ProductGrid = ({ products }) => {
     return (
       <div className={styles.dataNotFound}>
         <h3 className={styles.title}>No products found</h3>
-        <p className="text-gray-500 mt-2">
+        <p>
           Try adjusting your filters to find what you're looking for
         </p>
       </div>

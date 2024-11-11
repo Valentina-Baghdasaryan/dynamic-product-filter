@@ -9,14 +9,14 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { useMediaQuery } from '@mui/material';
-import ProductGrid from './components/ProductGrid';
+import { CircularProgress, useMediaQuery } from '@mui/material';
+import { fetchProducts } from './services/api.js';
 import { useFilters } from './hooks/useFilter.js';
+import ProductGrid from './components/ProductGrid';
 import FilterSidebar from './components/FilterSidebar/index.jsx';
 
 import './App.scss';
 import './index.scss';
-import { fetchProducts } from './services/api.js';
 
 const drawerWidth = 320;
 
@@ -124,7 +124,8 @@ function App() {
             />
           )}
           {loading ? (
-            <p className="loadingProducts">Loading products...</p>
+            <div className='loadingProducts'>
+            <CircularProgress color="secondary" /></div>
           ) : (
             <ProductGrid products={filteredProducts} />
           )}

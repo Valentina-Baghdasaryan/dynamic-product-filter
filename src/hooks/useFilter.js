@@ -24,6 +24,13 @@ export const useFilters = (products) => {
 
     let result = [...products];
 
+    if (filters.search) {
+      const searchTerm = filters.search.toLowerCase();
+      result = result.filter((product) =>
+        product.name.toLowerCase().includes(searchTerm)
+      );
+    }
+
     if (filters.category.length > 0) {
       result = result.filter((product) =>
         filters.category.includes(product.category),

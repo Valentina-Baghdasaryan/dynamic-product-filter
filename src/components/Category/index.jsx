@@ -3,10 +3,10 @@ import { Checkbox } from '@mui/material';
 const Category = ({ data, filters, title, type, handleOnChange }) => {
   return (
     <div>
-      <h3 className="text-lg font-semibold mb-3">{title}</h3>
-      <div className="space-y-2">
+      <h3>{title}</h3>
+      <div>
         {data?.map((item, index) => (
-          <div key={index} className="flex items-center">
+          <div key={index} >
             <Checkbox
               id={`category-${item}`}
               checked={
@@ -15,10 +15,15 @@ const Category = ({ data, filters, title, type, handleOnChange }) => {
                   : filters.category.includes(item)
               }
               onChange={(e) => handleOnChange(item)}
+              sx={{
+                color: '#915F6D',
+                '&.Mui-checked': {
+                  color: '#915F6D',
+                },
+              }}
             />
             <label
               htmlFor={`category-${item}`}
-              className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               {item}
             </label>

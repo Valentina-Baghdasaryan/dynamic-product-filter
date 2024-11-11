@@ -1,10 +1,17 @@
 import PriceRange from '../PriceRangeSlider/index.jsx';
 import Category from '../Category/index.jsx';
-import { FormControl, MenuItem, Select } from '@mui/material';
+import { FormControl, Input, MenuItem, Select } from '@mui/material';
 
 import styles from './index.module.scss';
+import { useEffect, useState } from 'react';
+import { useDebounce } from '../../hooks/useDebounce.js';
 
 const FilterSidebar = ({ filters, setFilters, categories, brands }) => {
+  const [searchInput, setSearchInput] = useState(filters.search || '');
+  console.log(searchInput, 'searchInputsearchInput');
+  
+  const debouncedSearch = useDebounce(searchInput, 500);
+
   const handleCategoryChange = (category) => {
     const newCategories = filters.category.includes(category)
       ? filters.category.filter((c) => c !== category)
@@ -19,14 +26,50 @@ const FilterSidebar = ({ filters, setFilters, categories, brands }) => {
     setFilters({ ...filters, brand: newBrands });
   };
 
+  useEffect(() => {
+    setFilters({ ...filters, search: debouncedSearch });
+  }, [debouncedSearch]);
+
   return (
     <div className={styles.filterSide}>
       <div>
-        <h3 className="text-lg font-semibold mb-3">Sort By</h3>
+        <h3>Search</h3>
+        <Input
+          type="text"
+          placeholder="Search products..."
+          value={filters.search || ''}
+          onChange={(e) => setSearchInput(e.target.value)}
+          sx={{
+            border: '1px solid #915F6D',
+            borderRadius: '4px',
+            padding: '8px',
+            '&:hover': {
+              borderColor: 'purple',
+            },
+            '&:focus-within': {
+              borderColor: '#915F6D',
+            },
+          }}
+        />
+      </div>
+
+      <div>
+        <h3>Sort By</h3>
         <FormControl
           sx={{
             m: 1,
             minWidth: 120,
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderColor: '#DA70D6',
+              },
+              '&:hover fieldset': {
+                borderColor: 'purple',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#915F6D	',
+              },
+            },
           }}
         >
           <Select
@@ -37,6 +80,18 @@ const FilterSidebar = ({ filters, setFilters, categories, brands }) => {
             }
             inputProps={{
               'aria-label': 'Without label',
+            }}
+            MenuProps={{
+              PaperProps: {
+                sx: {
+                  '& .Mui-selected': {
+                    backgroundColor: '#D8BFD8',
+                    '&:hover': {
+                      backgroundColor: '#CF9FFF',
+                    },
+                  },
+                },
+              },
             }}
           >
             <MenuItem value="">Featured</MenuItem>
@@ -63,11 +118,22 @@ const FilterSidebar = ({ filters, setFilters, categories, brands }) => {
         handleOnChange={handleBrandChange}
       />
       <div>
-        <h3 className="text-lg font-semibold mb-3">Minimum Rating</h3>
+        <h3>Minimum Rating</h3>
         <FormControl
           sx={{
             m: 1,
             minWidth: 120,
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderColor: '#DA70D6',
+              },
+              '&:hover fieldset': {
+                borderColor: 'purple',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#915F6D	',
+              },
+            },
           }}
         >
           <Select
@@ -78,6 +144,18 @@ const FilterSidebar = ({ filters, setFilters, categories, brands }) => {
             }
             inputProps={{
               'aria-label': 'Without label',
+            }}
+            MenuProps={{
+              PaperProps: {
+                sx: {
+                  '& .Mui-selected': {
+                    backgroundColor: '#D8BFD8',
+                    '&:hover': {
+                      backgroundColor: '#CF9FFF',
+                    },
+                  },
+                },
+              },
             }}
           >
             <MenuItem value="">Any Rating</MenuItem>

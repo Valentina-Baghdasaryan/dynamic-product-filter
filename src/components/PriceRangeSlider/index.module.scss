@@ -1,0 +1,10 @@
+.priceWrapper{
+    display: flex;
+    justify-content: space-between;
+
+    span{
+        color: rgb(108, 63, 108);
+        font-size: 16px;
+        font-weight: bold;
+    }
+}

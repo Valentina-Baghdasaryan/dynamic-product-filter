@@ -1,10 +1,12 @@
 import { Slider } from '@mui/material';
 
+import styles from './index.module.scss';
+
 const PriceRange = ({ filters, setFilters }) => {
   return (
     <div>
-      <h3 className="text-lg font-semibold mb-3">Price Range</h3>
-      <div className="px-2">
+      <h3>Price Range</h3>
+      <div>
         <Slider
           value={[filters.priceRange[0], filters.priceRange[1]]}
           min={0}
@@ -14,8 +16,17 @@ const PriceRange = ({ filters, setFilters }) => {
           onChange={(event, value) =>
             setFilters({ ...filters, priceRange: value })
           }
+          sx={{
+            color: '#915F6D',
+            '& .MuiSlider-thumb': {
+              backgroundColor: 'white',
+            },
+            '& .MuiSlider-rail': {
+              color: 'gray',
+            },
+          }}
         />
-        <div>
+        <div className={styles.priceWrapper}>
           <span>${filters.priceRange[0]}</span>
           <span>${filters.priceRange[1]}</span>
         </div>
